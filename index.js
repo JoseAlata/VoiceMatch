@@ -17,41 +17,26 @@ document.getElementById("btnEar").addEventListener("click", () => {
       alert("Por favor, ingresa un texto para sintetizar");
       return;
     }
-    const message = new SpeechSynthesisUtterance(text);
-    if (voiceSelected) {
-      message.voice = voiceSelected;
-    }
+    //options
+    const voice = voiceSelected || "US English Female";
+    const options = {};
+
     if (rateSelected) {
-      message.rate = rateSelected;
+      options.rate = rateSelected;
     }
-    speechSynthesis.speak(message);
+    responsiveVoice.speak(text, voice, options);
   } catch (error) {
     console.error("Error:", error);
   }
 });
 
 selectVoice.addEventListener("change", () => {
-  const selectIndex = parseInt(selectVoice.value);
-  voiceSelected = allVoices[selectIndex];
+  voiceSelected = selectVoice.value;
 });
 
 selectRate.addEventListener("change", () => {
   rateSelected = parseFloat(selectRate.value);
 });
-
-/*espera q cargue los tipos */
-window.speechSynthesis.onvoiceschanged = () => {
-  allVoices = window.speechSynthesis.getVoices();
-  selectVoice.innerHTML =
-    '<option value="" selected disabled>Selecciona una voz</option>';
-
-  allVoices.forEach((voice, index) => {
-    const optionVoice = document.createElement("option");
-    optionVoice.value = index;
-    optionVoice.textContent = voice.name;
-    selectVoice.appendChild(optionVoice);
-  });
-};
 
 navigator.mediaDevices
   .getUserMedia({ audio: true })
